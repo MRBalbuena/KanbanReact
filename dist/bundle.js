@@ -121,14 +121,26 @@ var CheckList_1 = __webpack_require__(4);
 var Card = (function (_super) {
     __extends(Card, _super);
     function Card() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super.call(this) || this;
+        _this.state = { showDetails: false };
+        return _this;
     }
+    ;
     Card.prototype.render = function () {
-        return (React.createElement("div", { className: "card" },
-            React.createElement("div", { className: "card__title" }, this.props.title),
-            React.createElement("div", { className: "card_details" },
+        var _this = this;
+        var cardDetails;
+        if (this.state.showDetails) {
+            cardDetails = (React.createElement("div", { className: "card_details" },
                 this.props.description,
-                React.createElement(CheckList_1.CheckList, { cardId: this.props.id, tasks: this.props.tasks }))));
+                React.createElement(CheckList_1.CheckList, { cardId: this.props.id, tasks: this.props.tasks })));
+        }
+        ;
+        return (React.createElement("div", { className: "card" },
+            React.createElement("div", { className: "card__title", key: this.props.id, onClick: function () {
+                    console.log("click");
+                    _this.setState({ showDetails: !_this.state.showDetails });
+                } }, this.props.title),
+            cardDetails));
     };
     return Card;
 }(React.Component));
