@@ -8,7 +8,17 @@ export interface ICard {
     tasks: any;
 }
 
-export class Card extends React.Component<ICard, never>{
+export interface IState {
+    showDetails: boolean;
+}
+
+export class Card extends React.Component<ICard, IState>{
+    public state: IState;
+    constructor(){            
+        super();    
+        this.state = { showDetails: false};
+        
+    };
     render() {
         return (
             <div className="card">
