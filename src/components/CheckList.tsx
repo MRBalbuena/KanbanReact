@@ -6,8 +6,8 @@ export interface ICheckList{
 }
 export class CheckList extends React.Component<ICheckList, never>{
     render(){
-        let tasks = this.props.tasks.map((task: any)=> {            
-            return <li className="checklist__task">
+        let tasks = this.props.tasks.map((task: any, index: number)=> {            
+            return <li className="checklist__task" key={index}>
                 <input type="checkbox" defaultChecked={task.done} />
                 {task.name}
                 <a href="#" className="checklist__task--remove" />
