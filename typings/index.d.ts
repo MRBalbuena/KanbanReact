@@ -4,3 +4,4 @@
 /// <reference path="modules/express/index.d.ts" />
 /// <reference path="modules/mime/index.d.ts" />
 /// <reference path="modules/serve-static/index.d.ts" />
+/// <reference path="./interfaces.d.ts" />
