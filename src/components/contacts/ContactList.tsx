@@ -3,12 +3,16 @@ import {ContactItem} from './ContactItem';
 
 interface IContactListProps{
     contacts: IContact[];
+    filterText: string;
 }
 
 export class ContactList extends React.Component<IContactListProps, {}>{
     render(){
+        let filteredContacts = this.props.contacts.filter((contact)=>{
+            return contact.name.indexOf(this.props.filterText) != -1
+        });
         return <ul>
-            {this.props.contacts.map((contact: any)=> {
+            {filteredContacts.map((contact: any)=> {
                 return <ContactItem key={contact.email} contact={contact}/>        
             })}
         </ul>        

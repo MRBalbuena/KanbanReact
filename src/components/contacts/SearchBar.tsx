@@ -1,7 +1,10 @@
 import * as React from 'react';
 
-export class SearchBar extends React.Component<{},{}>{
+interface ISearchBarProps{
+    filterText: string;
+}
+export class SearchBar extends React.Component<ISearchBarProps,{}>{
     render (){
-        return <input type="search" placeholder="search" />
+        return <input type="search" placeholder="search" value={this.props.filterText}/>
     }
 }
