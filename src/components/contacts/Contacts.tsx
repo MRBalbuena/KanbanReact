@@ -20,9 +20,13 @@ export class Contacts extends React.Component<IContactsProps,IContactsState>{
             filterText: ''
         };
     }
+
+    handleUserInput(searchItem: string){
+        this.setState({filterText: searchItem});
+    };
     render(){
         return <div>
-            <SearchBar filterText={this.state.filterText}/>
+            <SearchBar filterText={this.state.filterText} onUserInput={this.handleUserInput.bind(this)}/>
             <ContactList contacts={this.props.contacts} filterText={this.state.filterText}/>
         </div>
     }
