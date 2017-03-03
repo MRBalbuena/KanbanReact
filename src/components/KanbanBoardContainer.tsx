@@ -1,10 +1,12 @@
 import * as React from "react";
 import { KanbanBoard } from './KanbanBoard';
 import * as rp from 'request-promise';
+var update = require('react-addons-update');
+require("jspolyfill-array.prototype.findIndex");
 
 
 interface KanbanBoardContainerState {
-    cards: any;
+    cards: ICard[];
 }
 
 const API_URL = 'http://kanbanapi.pro-react.com';
@@ -40,7 +42,13 @@ export class KanbanBoardContainer extends React.Component<{}, KanbanBoardContain
         console.log('addTask');
     }
     deleteTask(cardId: number, taskName: string){
-        console.log('deleteTask');
+        // var arr = [1,2,3,4,5];
+                
+        // let cardIndex = this.state.cards.filter((f:ICard)=> f.id == cardId);
+        // let nextState = update(this.state.cards, {
+        //     [cardIndex]
+        // })
+        
     }
     toggleTask(cardId: number, taskName: string){
         console.log('toggleTask');
