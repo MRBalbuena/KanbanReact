@@ -8,14 +8,15 @@ export interface ICard {
     description : string;
     color: string;
     tasks : any;
+    taskCallbacks: ITaskCallbacks
 }
 
-export interface IState {
-    showDetails : boolean;
+export interface ICardState {
+    showDetails : boolean;    
 }
 
-export class Card extends React.Component < ICard,IState > {
-    public state : IState;
+export class Card extends React.Component < ICard,ICardState > {
+    public state : ICardState;
     constructor() {
         super();
         this.state = {
@@ -33,7 +34,7 @@ export class Card extends React.Component < ICard,IState > {
             cardDetails = (
                 <div className="card_details">
                     <span dangerouslySetInnerHTML={{__html: marked(this.props.description)}} />
-                    <CheckList cardId={this.props.id} tasks={this.props.tasks}/>
+                    <CheckList cardId={this.props.id} tasks={this.props.tasks} taskCallbacks={this.props.taskCallbacks}/>
                 </div>
             )
         };

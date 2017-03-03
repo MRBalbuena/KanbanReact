@@ -4,13 +4,14 @@ import {Card} from "./Card";
 export interface IList {
     title: string;
     id: string;
-    cards: any;    
+    cards: any;       
+    taskCallbacks: ITaskCallbacks;
 };
 
 export class List extends React.Component<IList, never>{
     render(){
-        var cards = this.props.cards.map((card: any) => {            
-            return <Card id={card.id} key={card.id} title={card.title} 
+        let cards = this.props.cards.map((card: any) => {            
+            return <Card id={card.id} taskCallbacks={this.props.taskCallbacks} key={card.id} title={card.title}                 
                 description={card.description} color={card.color} tasks={card.tasks}/> 
         });
         return (

@@ -36,7 +36,26 @@ export class KanbanBoardContainer extends React.Component<{}, KanbanBoardContain
             })
     }
 
-    render() {
-        return <KanbanBoard cards={this.state.cards} />
+    addTask(cardId: number, taskName: string){
+        console.log('addTask');
+    }
+    deleteTask(cardId: number, taskName: string){
+        console.log('deleteTask');
+    }
+    toggleTask(cardId: number, taskName: string){
+        console.log('toggleTask');
+    }
+    
+    render() {        
+        return <KanbanBoard cards={this.state.cards} 
+            taskCallbacks = {
+                {
+                    toggle: this.toggleTask.bind(this),
+                    add: this.addTask.bind(this),
+                    delete: this.deleteTask.bind(this)
+                }
+            }
+
+        />
     }
 }
