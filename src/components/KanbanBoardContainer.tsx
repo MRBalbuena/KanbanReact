@@ -41,13 +41,21 @@ export class KanbanBoardContainer extends React.Component<{}, KanbanBoardContain
     addTask(cardId: number, taskName: string){
         console.log('addTask');
     }
-    deleteTask(cardId: number, taskName: string){
-        // var arr = [1,2,3,4,5];
-                
-        // let cardIndex = this.state.cards.filter((f:ICard)=> f.id == cardId);
-        // let nextState = update(this.state.cards, {
-        //     [cardIndex]
-        // })
+    deleteTask(cardId: number, taskId: number, taskIndex: number){  
+        var originalState = this.state;                            
+        var cardsCopy = this.state.cards.map((m: ICard) => m);
+        let card = cardsCopy.filter((f:ICard)=> f.id == cardId);
+        let tasksCopy = card[0].tasks.filter((t: ITask) => t);
+        let taskIdx = 0;
+        tasksCopy.some((t: ITask, i:number) => {
+            if(t.id == taskId) {
+                taskIdx = i;
+                return true;
+            } 
+        })
+        tasksCopy.splice(taskIdx, 1);
+
+        console.log(tasksCopy);
         
     }
     toggleTask(cardId: number, taskName: string){
