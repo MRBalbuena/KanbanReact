@@ -24,7 +24,7 @@ export class KanbanBoardContainer extends React.Component<{}, KanbanBoardContain
 
     componentDidMount() {
         let req = {
-            uri: API_URL + '/cards',            
+            uri: API_URL + '/cards',
             method: 'GET',
             headers: API_HEADERS,
             json: true
@@ -38,33 +38,104 @@ export class KanbanBoardContainer extends React.Component<{}, KanbanBoardContain
             })
     }
 
-    addTask(cardId: number, taskName: string){
-        console.log('addTask');
+    addTask(cardId: number, taskName: string) {
+        let cardIdx = 0;
+        let originalState = this.state;
+        let cardsCopy = this.state.cards.map((c: ICard, i: number) => {
+            if (c.id == cardId) cardIdx = i;
+            return c;
+        });
+        let newTask = { id: Date.now(), name: taskName, done: false };
+        let tasksCopy = cardsCopy[cardIdx].tasks.map((t: ITask) => t);
+        tasksCopy.push(newTask);
+        cardsCopy[cardIdx].tasks = tasksCopy;
+        this.setState({ cards: cardsCopy });
+        let req = {
+            uri: `${API_URL}/cards/${cardId}/tasks`,
+            method: 'post',
+            headers: API_HEADERS,
+            json: true,
+            body: JSON.stringify(newTask)
+        };
+        rp(req)
+            .then((responseData: any) => {
+                console.log(responseData);
+                newTask.id = responseData.id;
+                this.setState({ cards: cardsCopy })
+            })
+            .catch((error: any) => {
+                console.log('Error adding task: ', error);
+            });
     }
-    deleteTask(cardId: number, taskId: number, taskIndex: number){  
-        var originalState = this.state;                            
+    deleteTask(cardId: number, taskId: number) {
+        var originalState = this.state;
         var cardsCopy = this.state.cards.map((m: ICard) => m);
-        let card = cardsCopy.filter((f:ICard)=> f.id == cardId);
-        let tasksCopy = card[0].tasks.filter((t: ITask) => t);
+        let cardIdx = 0;
+        let card = cardsCopy.filter((f: ICard, i: number) => {
+            if (f.id == cardId) cardIdx = i;
+            return f.id == cardId;
+        });
         let taskIdx = 0;
-        tasksCopy.some((t: ITask, i:number) => {
-            if(t.id == taskId) {
+        card[0].tasks.some((t: ITask, i: number) => {
+            if (t.id == taskId) {
                 taskIdx = i;
                 return true;
-            } 
+            }
         })
-        tasksCopy.splice(taskIdx, 1);
+        card[0].tasks.splice(taskIdx, 1);
+        this.setState({ cards: cardsCopy });
+        // Call server to remove task
+        let req = {
+            uri: `${API_URL}/cards/${cardId}/tasks/${taskId}`,
+            method: 'delete',
+            headers: API_HEADERS,
+            json: true
+        };
+        rp(req)
+            .then((responseData: any) => {
+                console.log(responseData)
+            })
+            .catch((error: any) => {
+                console.log('Error deleting task: ', error);
+                this.setState(originalState);
+            });
 
-        console.log(tasksCopy);
-        
     }
-    toggleTask(cardId: number, taskName: string){
-        console.log('toggleTask');
+    toggleTask(cardId: number, taskId: number) {
+        let cardIdx = 0;
+        let originalState = this.state;
+        let cardsCopy = this.state.cards.map((c: ICard, i: number) => {
+            if (c.id == cardId) cardIdx = i;
+            return c;
+        });
+        let taskIdx = 0;
+        let tasksCopy = cardsCopy[cardIdx].tasks.map((t: ITask, i: number) => {
+            if (t.id == taskId) taskIdx = i;
+            return t;
+        });
+        tasksCopy[taskIdx].done = !tasksCopy[taskIdx].done;
+        this.setState({ cards: cardsCopy });
+
+        let req = {
+            uri: `${API_URL}/cards/${cardId}/tasks/${taskId}`,
+            method: 'put',
+            headers: API_HEADERS,
+            json: true,
+            body: JSON.stringify(tasksCopy[taskIdx])
+        };
+        rp(req)
+            .then((responseData: any) => {
+                console.log(responseData)
+            })
+            .catch((error: any) => {
+                console.log('Error deleting task: ', error);
+                this.setState(originalState);
+            });
     }
-    
-    render() {        
-        return <KanbanBoard cards={this.state.cards} 
-            taskCallbacks = {
+
+    render() {
+        return <KanbanBoard cards={this.state.cards}
+            taskCallbacks={
                 {
                     toggle: this.toggleTask.bind(this),
                     add: this.addTask.bind(this),
