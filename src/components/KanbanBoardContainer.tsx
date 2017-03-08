@@ -53,14 +53,13 @@ export class KanbanBoardContainer extends React.Component<{}, KanbanBoardContain
         let req = {
             uri: `${API_URL}/cards/${cardId}/tasks`,
             method: 'post',
-            headers: API_HEADERS,
-            json: true,
+            headers: API_HEADERS,            
             body: JSON.stringify(newTask)
         };
         rp(req)
             .then((responseData: any) => {
                 console.log(responseData);
-                newTask.id = responseData.id;
+                newTask.id = JSON.parse(responseData).id;
                 this.setState({ cards: cardsCopy })
             })
             .catch((error: any) => {
@@ -119,8 +118,7 @@ export class KanbanBoardContainer extends React.Component<{}, KanbanBoardContain
         let req = {
             uri: `${API_URL}/cards/${cardId}/tasks/${taskId}`,
             method: 'put',
-            headers: API_HEADERS,
-            json: true,
+            headers: API_HEADERS,            
             body: JSON.stringify(tasksCopy[taskIdx])
         };
         rp(req)
