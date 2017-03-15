@@ -1,6 +1,5 @@
 import * as React from "react";
 import { List } from "./List";
-import {Contacts} from './contacts/Contacts';
 import {ContactListData} from '../containers/ContactListData';
 
 var contacts = new ContactListData();
@@ -25,8 +24,7 @@ export class KanbanBoard extends React.Component<IKanbanBoard, never>{
                     taskCallbacks={this.props.taskCallbacks}
                     cards={this.props.cards.filter((card: any) => card.status == "done")
                 } />
-                <br/>
-                <Contacts contacts={contacts.contacts}/>
+                <br/>                
             </div>
         )
     }
