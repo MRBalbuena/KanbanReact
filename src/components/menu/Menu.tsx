@@ -1,7 +1,8 @@
 import * as React from 'react';
 import {Router, Route, Link} from 'react-router';
 
-export class Menu extends React.Component < {}, {} > {
+export class 
+Menu extends React.Component < {}, {} > {
   render() {
     return (
       <div>
