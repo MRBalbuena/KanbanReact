@@ -12,8 +12,9 @@ import createBroswerHistory from 'history/lib/createBrowserHistory';
 export var routes = (  
   
   <Router history={createBroswerHistory()}>
-    <Route path="/" component={KanbanBoardContainer}>
-      <IndexRoute component={KanbanBoardContainer}/>
+    <Route path="/" component={Menu}>
+      <IndexRoute component={Home}/>
+      <Route path="kanban" component={KanbanBoardContainer}/>
       <Route path="repos" component={Repos}/>
       <Route path="contacts" component={Contacts}/>
       <Route path="about" component={About}/>

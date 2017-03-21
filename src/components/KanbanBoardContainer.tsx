@@ -154,15 +154,14 @@ KanbanBoardContainerState > {
     }
 
     render() {
-        return <div>
-            <Menu />
+        return <div>        
             <KanbanBoard
                 cards={this.state.cards}
                 taskCallbacks={{
                 toggle: this.toggleTask.bind(this),
                 add: this.addTask.bind(this),
                 delete: this.deleteTask.bind(this)
-            }}/>
+            }}/>            
         </div>
     }
 }

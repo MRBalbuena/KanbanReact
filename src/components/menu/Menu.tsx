@@ -10,6 +10,9 @@ Menu extends React.Component < {}, {} > {
         <menu>
           <ul>
             <li>
+              <Link to="/kanban">Kanban</Link>
+            </li>            
+            <li>
               <Link to="/about">About</Link>
             </li>
             <li>
