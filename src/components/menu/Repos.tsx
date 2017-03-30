@@ -1,5 +1,6 @@
 import * as React  from 'react';
 import * as reqPromise from 'request-promise';
+import {Link} from 'react-router';
 
 interface IReposState {
   repositories: any[];
@@ -21,20 +22,22 @@ export class Repos extends React.Component<{}, IReposState> {
       headers: {'Content-Type': 'application/json'},
       json: true
     };
-    reqPromise(req).then((responseData: any) => {
-      console.log(responseData);
+    reqPromise(req).then((responseData: any) => {      
       this.setState({repositories: responseData});
     })
   }
 
   render() {
     let repos = this.state.repositories.map((repo: any) => {
-      return <li key={repo.id}>{repo.name}</li>
+      return <li key={repo.id}>
+        <Link to={"/repos/details/" + repo.name}> {repo.name}</Link>
+        </li>
     });
     return (
       <div>
         <h1>GitHub Repos</h1>
         <ul>{repos}</ul>
+        {this.props.children}
       </div>
     );
   }
