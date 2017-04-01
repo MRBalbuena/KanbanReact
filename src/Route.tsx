@@ -6,12 +6,12 @@ import {Repos} from './components/menu/Repos';
 import {RepoDetails} from './components/menu/RepoDetails';
 import {Menu} from './components/menu/Menu';
 import {Home} from './components/menu/Home';
+import {ServerError} from './components/menu/ServerError';
 import {Contacts} from './components/contacts/Contacts';
 import {KanbanBoardContainer} from './components/KanbanBoardContainer';
 import createBroswerHistory from 'history/lib/createBrowserHistory';
 
 export var routes = (
-
   <Router history={createBroswerHistory()}>
     <Route path="/" component={Menu}>
       <IndexRoute component={Home}/>
@@ -22,6 +22,7 @@ export var routes = (
       </Route>
       <Route path="contacts" component={Contacts}/>
       <Route path="about" component={About}/>
+      <Route path="error" component={ServerError}/>
     </Route>
   </Router>
 

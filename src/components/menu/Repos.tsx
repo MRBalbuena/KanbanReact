@@ -6,7 +6,11 @@ interface IReposState {
   repositories: any[];
 }
 
-export class Repos extends React.Component<{}, IReposState> {
+interface IReposProps{
+  router: any;
+}
+
+export class Repos extends React.Component<IReposProps, IReposState> {
   public state: IReposState
   constructor(){
     super();
@@ -22,9 +26,13 @@ export class Repos extends React.Component<{}, IReposState> {
       headers: {'Content-Type': 'application/json'},
       json: true
     };
-    reqPromise(req).then((responseData: any) => {      
-      this.setState({repositories: responseData});
-    })
+    reqPromise(req)
+      .then((responseData: any) => {      
+        this.setState({repositories: responseData});
+      })
+      .catch((error) => {
+        this.props.router.push('/error');
+      })
   }
 
   render() {

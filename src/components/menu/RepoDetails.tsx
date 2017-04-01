@@ -35,11 +35,11 @@ IRepoDetailsState > {
     let repo_name = this.props.params.repo_name;
     this.getData(repo_name);
   }
-  componentWillRecieveProps(nextProps : any) {}
+  componentWillReceiveProps(nextProps : any) {}
   render() {
     let stars = [];
     for (var i = 0; i < this.state.repository.stargazers_count; i++) {
-      stars.push('');
+      stars.push('* ');
     }
     return (
       <div>
