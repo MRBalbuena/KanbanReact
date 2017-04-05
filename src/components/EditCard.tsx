@@ -1,15 +1,18 @@
 import * as React from 'react';
 import { CardForm } from './CardForm';
 
-interface IEditCardProps{
+interface IEditCardProps {
     cards: ICard[];
     router: any;
     cardCallbacks: any;
+    params: any
 }
 
 export class EditCard extends React.Component<IEditCardProps, {}>{
     componentWillMount() {
-        let card = this.props.cards.find((card) => card.id == this.props.params.card_id);
+        let card = this.props.cards.filter((card) => {
+            card.id == this.props.params.card_id
+        });
         this.setState({ ...card });
     }
     handleChange(value: ICard) {
@@ -33,4 +36,3 @@ export class EditCard extends React.Component<IEditCardProps, {}>{
         )
     }
 }    
-}

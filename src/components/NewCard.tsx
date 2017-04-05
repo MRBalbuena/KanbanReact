@@ -43,4 +43,3 @@ export class NewCard extends React.Component<INewCardProps, INewCardState>{
         );
     }
 }    
-}

@@ -59,4 +59,3 @@ export class CardForm extends React.Component<CardFormProps, {}>{
         );
     }
 }    
-}

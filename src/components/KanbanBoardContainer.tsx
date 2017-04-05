@@ -1,12 +1,12 @@
 import * as React from "react";
-import {KanbanBoard} from './KanbanBoard';
-import {Menu} from './menu/Menu';
+import { KanbanBoard } from './KanbanBoard';
+import { Menu } from './menu/Menu';
 import * as rp from 'request-promise';
 var update = require('react-addons-update');
 require("jspolyfill-array.prototype.findIndex");
 
 interface KanbanBoardContainerState {
-    cards : ICard[];
+    cards: ICard[];
 }
 
 const API_URL = 'http://kanbanapi.pro-react.com';
@@ -15,8 +15,8 @@ const API_HEADERS = {
     'Authorization': 'xxx'
 };
 
-export class KanbanBoardContainer extends React.Component < {},
-KanbanBoardContainerState > {
+export class KanbanBoardContainer extends React.Component<{},
+    KanbanBoardContainerState> {
     public state: KanbanBoardContainerState;
     constructor() {
         super();
@@ -32,21 +32,21 @@ KanbanBoardContainerState > {
             headers: API_HEADERS,
             json: true
         };
-        rp(req).then((responseData : any) => {
-            this.setState({cards: responseData})
-        }).catch((error : any) => {
+        rp(req).then((responseData: any) => {
+            this.setState({ cards: responseData })
+        }).catch((error: any) => {
             console.log('Error fetching and parsing data', error);
         })
     }
 
-    addTask(cardId : number, taskName : string) {
+    addTask(cardId: number, taskName: string) {
         let cardIdx = 0;
         let originalState = this.state;
         let cardsCopy = this
             .state
             .cards
-            .map((c : ICard, i : number) => {
-                if (c.id == cardId) 
+            .map((c: ICard, i: number) => {
+                if (c.id == cardId)
                     cardIdx = i;
                 return c;
             });
@@ -57,42 +57,41 @@ KanbanBoardContainerState > {
         };
         let tasksCopy = cardsCopy[cardIdx]
             .tasks
-            .map((t : ITask) => t);
+            .map((t: ITask) => t);
         tasksCopy.push(newTask);
         cardsCopy[cardIdx].tasks = tasksCopy;
-        this.setState({cards: cardsCopy});
+        this.setState({ cards: cardsCopy });
         let req = {
             uri: `${API_URL}/cards/${cardId}/tasks`,
             method: 'post',
             headers: API_HEADERS,
             body: JSON.stringify(newTask)
         };
-        rp(req).then((responseData : any) => {
-            console.log(responseData);
+        rp(req).then((responseData: any) => {
             newTask.id = JSON
                 .parse(responseData)
                 .id;
-            this.setState({cards: cardsCopy})
-        }).catch((error : any) => {
+            this.setState({ cards: cardsCopy })
+        }).catch((error: any) => {
             console.log('Error adding task: ', error);
         });
     }
-    deleteTask(cardId : number, taskId : number) {
+    deleteTask(cardId: number, taskId: number) {
         var originalState = this.state;
         var cardsCopy = this
             .state
             .cards
-            .map((m : ICard) => m);
+            .map((m: ICard) => m);
         let cardIdx = 0;
-        let card = cardsCopy.filter((f : ICard, i : number) => {
-            if (f.id == cardId) 
+        let card = cardsCopy.filter((f: ICard, i: number) => {
+            if (f.id == cardId)
                 cardIdx = i;
             return f.id == cardId;
         });
         let taskIdx = 0;
         card[0]
             .tasks
-            .some((t : ITask, i : number) => {
+            .some((t: ITask, i: number) => {
                 if (t.id == taskId) {
                     taskIdx = i;
                     return true;
@@ -101,7 +100,7 @@ KanbanBoardContainerState > {
         card[0]
             .tasks
             .splice(taskIdx, 1);
-        this.setState({cards: cardsCopy});
+        this.setState({ cards: cardsCopy });
         // Call server to remove task
         let req = {
             uri: `${API_URL}/cards/${cardId}/tasks/${taskId}`,
@@ -109,35 +108,35 @@ KanbanBoardContainerState > {
             headers: API_HEADERS,
             json: true
         };
-        rp(req).then((responseData : any) => {
+        rp(req).then((responseData: any) => {
             console.log(responseData)
-        }).catch((error : any) => {
+        }).catch((error: any) => {
             console.log('Error deleting task: ', error);
             this.setState(originalState);
         });
 
     }
-    toggleTask(cardId : number, taskId : number) {
+    toggleTask(cardId: number, taskId: number) {
         let cardIdx = 0;
         let originalState = this.state;
         let cardsCopy = this
             .state
             .cards
-            .map((c : ICard, i : number) => {
-                if (c.id == cardId) 
+            .map((c: ICard, i: number) => {
+                if (c.id == cardId)
                     cardIdx = i;
                 return c;
             });
         let taskIdx = 0;
         let tasksCopy = cardsCopy[cardIdx]
             .tasks
-            .map((t : ITask, i : number) => {
-                if (t.id == taskId) 
+            .map((t: ITask, i: number) => {
+                if (t.id == taskId)
                     taskIdx = i;
                 return t;
             });
         tasksCopy[taskIdx].done = !tasksCopy[taskIdx].done;
-        this.setState({cards: cardsCopy});
+        this.setState({ cards: cardsCopy });
 
         let req = {
             uri: `${API_URL}/cards/${cardId}/tasks/${taskId}`,
@@ -145,23 +144,60 @@ KanbanBoardContainerState > {
             headers: API_HEADERS,
             body: JSON.stringify(tasksCopy[taskIdx])
         };
-        rp(req).then((responseData : any) => {
+        rp(req).then((responseData: any) => {
             console.log(responseData)
-        }).catch((error : any) => {
+        }).catch((error: any) => {
             console.log('Error deleting task: ', error);
             this.setState(originalState);
         });
     }
 
+    addCard(card: ICard) {
+        let prevState = this.state;
+        if (card.id == null) {
+            let newCard = {
+                id: Date.now(),
+                title: card.title,
+                description: card.description,
+                color: card.color,
+                status: card.status,
+                tasks: card.tasks
+            };
+
+            card = newCard;
+        }
+        let nextState = update(this.state.cards, { $push: [card] });
+        // set the component state to the mutated object
+        this.setState({ cards: nextState });
+        let req = {
+            uri: `${API_URL}/cards/`,
+            headers: API_HEADERS,
+            body: JSON.stringify(card),
+            method: 'POST'
+        };
+        rp(req)
+            .then((responseData: any) => {
+                console.log(responseData);
+                card.id = responseData.id;
+                this.setState({ cards: nextState })
+            })
+            .catch((error) => {
+                this.setState(prevState);
+            });
+    }
+    updateCard(card: ICard) {
+
+    }
+
     render() {
-        return <div>        
+        return <div>
             <KanbanBoard
                 cards={this.state.cards}
                 taskCallbacks={{
-                toggle: this.toggleTask.bind(this),
-                add: this.addTask.bind(this),
-                delete: this.deleteTask.bind(this)
-            }}/>            
+                    toggle: this.toggleTask.bind(this),
+                    add: this.addTask.bind(this),
+                    delete: this.deleteTask.bind(this)
+                }} />
         </div>
     }
 }
